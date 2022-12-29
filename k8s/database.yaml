@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database
+spec:
+  selector:
+    matchLabels:
+      component: database
+  template:
+    metadata:
+      labels:
+        component: database
+    spec:
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: data-pvc
+      containers:
+        - name: database
+          image: mysql:5.7
+          resources:
+            limits:
+              memory: 1Gi
+              cpu: "1"
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+          env:
+            - name: MYSQL_DATABASE
+              value: user
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: DB_PASSWORD
+                  name: service-secret
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-database
+spec:
+  type: ClusterIP
+  selector:
+    component: database
+  ports:
+    - port: 3306
+      targetPort: 3306

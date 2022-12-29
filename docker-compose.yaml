@@ -1,0 +1,40 @@
+version: "3.3"
+services:
+  mysql-user:
+    container_name: mysql-user
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: user
+    volumes:
+      - mysql-user:/var/lib/mysql
+    networks:
+      - server-side
+
+  # basic-k8s:
+  #   container_name: deall-jobs
+  #   image: muhammadrivaldy05/basic-k8s:latest
+  #   restart: always
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 8080:8080
+  #   environment:
+  #     DB_ADDRESS: mysql-user
+  #     DB_USER: root
+  #     DB_PASSWORD: root
+  #   depends_on:
+  #     - mysql-user
+  #   networks:
+  #     - server-side
+
+networks:
+  server-side:
+
+volumes:
+  mysql-user:

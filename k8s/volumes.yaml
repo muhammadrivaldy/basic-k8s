@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-pv
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 2Gi
+  storageClassName: storage-volumes
+  persistentVolumeReclaimPolicy: Retain
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/var/lib/mysql"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-pvc
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: storage-volumes
+  volumeMode: Filesystem
+  selector:
+    matchLabels:
+      type: local
+  accessModes:
+    - ReadWriteOnce
