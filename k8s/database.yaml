@@ -17,7 +17,7 @@ spec:
             claimName: data-pvc
       containers:
         - name: database
-          image: mysql:5.7
+          image: mysql:8.0
           resources:
             limits:
               memory: 1Gi
