@@ -18,22 +18,20 @@ with Diagram("Simple Cluster of Kubernetes", show = False):
 
         ing >> backend_svc
 
-        with Cluster("Node"):
+        backend_1 = Pod("Backend-cbb496c3")
+        backend_2 = Pod("Backend-ff2b4ebf")
+        backend_3 = Pod("Backend-f13552aa")
 
-            backend_1 = Pod("Backend-cbb496c3")
-            backend_2 = Pod("Backend-ff2b4ebf")
-            backend_3 = Pod("Backend-f13552aa")
+        backend_svc >> [backend_1, backend_2, backend_3]
+        backend_1 >> database_svc
+        backend_2 >> database_svc
+        backend_3 >> database_svc
 
-            backend_svc >> [backend_1, backend_2, backend_3]
-            backend_1 >> database_svc
-            backend_2 >> database_svc
-            backend_3 >> database_svc
+        with Cluster("Pod Database"):
 
-            with Cluster("Pod Database"):
+            volume = Volume("Volume")
+            database = MySQL("Database MySQL")
 
-                volume = Volume("Volume")
-                database = MySQL("Database MySQL")
-
-                database_svc >> database
-                pv >> pvc << volume
-                database >> volume
+            database_svc >> database
+            pv >> pvc << volume
+            database >> volume
